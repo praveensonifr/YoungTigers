@@ -3,6 +3,7 @@ package com.example.bookings;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -11,12 +12,27 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.bookings.connection.Connection;
 import com.google.android.material.textfield.TextInputLayout;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 
 
 public class RegisterActivity extends AppCompatActivity {
 
-    EditText name,surname, email, phone, password;
+    EditText name,age, email, phone, password;
     Button register;
     TextView login;
     boolean isNameValid, isEmailValid, isPhoneValid, isPasswordValid;
@@ -28,7 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         name = (EditText) findViewById(R.id.name);
-        surname= (EditText) findViewById(R.id.surname);
+        age= (EditText) findViewById(R.id.surname);
         email = (EditText) findViewById(R.id.email);
         phone = (EditText) findViewById(R.id.phone);
         password = (EditText) findViewById(R.id.password);
@@ -39,9 +55,18 @@ public class RegisterActivity extends AppCompatActivity {
         phoneError = (TextInputLayout) findViewById(R.id.phoneError);
         passError = (TextInputLayout) findViewById(R.id.passError);
 
+
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String nameS = name.getText().toString();
+                String ageS = age.getText().toString();
+                String emailS = email.getText().toString();
+                String phoneS = phone.getText().toString();
+                String passwordS = password.getText().toString();
+
+               //new InsertData().execute(nameS,ageS,emailS,phoneS,passwordS);
+
                 SetValidation();
             }
         });
@@ -108,6 +133,71 @@ public class RegisterActivity extends AppCompatActivity {
             intent.putExtra("Pass", password.getText().toString());
             startActivity(intent);
         }
+
+    }
+
+    class InsertData extends AsyncTask<String,Void,String> {
+
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                String link = Connection.API + "signup.php";
+
+                String data = URLEncoder.encode("name","UTF-8") + "=" + URLEncoder.encode(strings[0],"UTF-8");
+                data += "&" + URLEncoder.encode("email","UTF-8") + "=" + URLEncoder.encode(strings[1],"UTF-8");
+                data += "&" + URLEncoder.encode("age","UTF-8") + "=" + URLEncoder.encode(strings[2],"UTF-8");
+                data += "&" + URLEncoder.encode("phone","UTF-8") + "=" + URLEncoder.encode(strings[3],"UTF-8");
+                data += "&" + URLEncoder.encode("password","UTF-8") + "=" + URLEncoder.encode(strings[4],"UTF-8");
+
+                URL url = new URL(link);
+                URLConnection urlConnection = url.openConnection();
+                urlConnection.setDoOutput(true);
+
+                OutputStreamWriter writer = new OutputStreamWriter(urlConnection.getOutputStream());
+                writer.write(data);
+                writer.flush();
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+
+                return  reader.readLine();
+
+
+            }
+            catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+                return "Error" + e.getMessage();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                return "Error" + e.getMessage();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "Error" + e.getMessage();
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            try {
+                JSONObject jsonObject = new JSONObject();
+
+                if(jsonObject.getString("response").equals("success")){
+
+                    Toast.makeText(getApplicationContext(), "Successfully Registered!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getBaseContext(), MainNavigation.class);
+                    startActivity(intent);
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Error!", Toast.LENGTH_SHORT).show();
+                }
+            }
+            catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
 
     }
 

@@ -17,6 +17,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 
+import com.example.bookings.LoginActivity;
 import com.example.bookings.R;
 import com.example.bookings.RegisterActivity;
 import com.example.bookings.ui.dashboard.DashboardFragment;
@@ -37,12 +38,16 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // redirect to RegisterActivity
-                DashboardFragment dashboardFragment = new DashboardFragment();
-                FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.nav_host_fragment,dashboardFragment);
-                fragmentTransaction.commit();
+//                DashboardFragment dashboardFragment = new DashboardFragment();
+//                FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+//                fragmentTransaction.replace(R.id.nav_host_fragment,dashboardFragment);
+//                fragmentTransaction.commit();
+
+                Intent intent = new Intent(getContext(), DashboardFragment.class);
+                startActivity(intent);
             }
         });
+
 
         /*final TextView textView = root.findViewById(R.id.text_home);
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {

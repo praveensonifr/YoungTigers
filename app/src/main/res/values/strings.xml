@@ -23,6 +23,17 @@
     <string name="BookButton">Book Room</string>
     <string name="title_Booking">BOOKING</string>
     <string name="title_Guests">Guest(s)</string>
+    
+    <string-array name="serviceshotel">
+        <item>Restaurant</item>
+        <item>Pool</item>
+        <item>Breakfast Buffet</item>
+    </string-array>
 
+    <string-array name="serviceshoteldetails">
+        <item>In our delux restaurant you can find in all our hotels discover gourmet dishes filled with creatice flavours</item>
+        <item>Enjoy our relaxing pools and sunbathing areas and enjoy your stay at our hotel</item>
+        <item>Start your mornings perfect with our delicious breakfast buffet with dishes from all over the world</item>
+    </string-array>
 
 </resources>

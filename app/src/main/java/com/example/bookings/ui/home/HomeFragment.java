@@ -15,6 +15,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.example.bookings.LoginActivity;
@@ -26,12 +28,25 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     private Button BooknowButton;
+    RecyclerView hotelservices;
+    private String services[];
+    private String servicesDetail[];
+    int images [] = {R.drawable.hotelbreakfast,R.drawable.hotelpool,R.drawable.hotelrestaurant};
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel =
                 new ViewModelProvider(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
+
+        services = getResources().getStringArray(R.array.serviceshotel);
+        servicesDetail = getResources().getStringArray(R.array.serviceshoteldetails);
+
+        HotelservicesAdapter hotelservicesAdapter = new HotelservicesAdapter(this.getContext(),services,servicesDetail,images);
+        RecyclerView hotelservices = root.findViewById(R.id.hotelservices);
+        hotelservices.setAdapter(hotelservicesAdapter);
+        hotelservices.setLayoutManager(new LinearLayoutManager(this.getContext()));
+
 
         Button BooknowButton = root.findViewById(R.id.BooknowButton);
         BooknowButton.setOnClickListener(new View.OnClickListener() {

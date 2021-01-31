@@ -21,13 +21,14 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class RegisterActivity extends AppCompatActivity {
@@ -119,7 +120,11 @@ public class RegisterActivity extends AppCompatActivity {
         } else if (password.getText().length() < 6) {
             passError.setError(getResources().getString(R.string.error_invalid_password));
             isPasswordValid = false;
-        } else  {
+        }
+        else if (!passwordValid(password.getText().toString())) {
+            passError.setError("Password must contain upper and lower case letters, numbers and one special character");
+        }
+        else  {
             isPasswordValid = true;
             passError.setErrorEnabled(false);
         }
@@ -134,6 +139,11 @@ public class RegisterActivity extends AppCompatActivity {
             startActivity(intent);
         }
 
+    }
+
+    public static boolean passwordValid(String password) {
+        Matcher matcher = Pattern.compile("((?=.*[a-z])(?=.*\\d)(?=.*[A-Z])(?=.*[@#$%!*_]).{0,20})").matcher(password);
+        return matcher.matches();
     }
 
     class InsertData extends AsyncTask<String,Void,String> {

@@ -45,7 +45,7 @@ public class HotelservicesAdapter extends RecyclerView.Adapter<HotelservicesAdap
 
     @Override
     public int getItemCount() {
-        return 3;
+        return services1.length;
     }
 
     public class ServicesHolder extends RecyclerView.ViewHolder{
